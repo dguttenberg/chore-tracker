@@ -1,0 +1,1356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <title>Chore Champions! 🌟</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html, body {
+            min-height: 100vh;
+            overflow-x: hidden;
+            touch-action: manipulation;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            padding-bottom: 40px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        /* Login Screen */
+        .login-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 85vh;
+        }
+
+        .login-title {
+            font-size: 3.5rem;
+            color: white;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.3);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .login-subtitle {
+            font-size: 1.8rem;
+            color: rgba(255,255,255,0.9);
+            margin-bottom: 50px;
+            text-align: center;
+        }
+
+        .user-buttons {
+            display: flex;
+            gap: 50px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .user-btn {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            border: 6px solid white;
+            font-size: 2.2rem;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            -webkit-touch-callout: none;
+            user-select: none;
+        }
+
+        .user-btn.zoe {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .user-btn.lev {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        .user-btn:active {
+            transform: scale(0.95);
+        }
+
+        @media (hover: hover) {
+            .user-btn:hover {
+                transform: scale(1.08);
+                box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+            }
+        }
+
+        .user-btn .emoji {
+            font-size: 4rem;
+            margin-bottom: 8px;
+        }
+
+        .parent-link {
+            margin-top: 50px;
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 15px 30px;
+            border: 2px solid rgba(255,255,255,0.5);
+            border-radius: 30px;
+            transition: all 0.3s;
+        }
+
+        .parent-link:active {
+            background: rgba(255,255,255,0.3);
+        }
+
+        /* Chore Screen */
+        .chore-screen {
+            display: none;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .welcome-msg {
+            font-size: 2rem;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .day-display {
+            background: rgba(255,255,255,0.2);
+            padding: 12px 24px;
+            border-radius: 25px;
+            color: white;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .logout-btn {
+            background: rgba(255,255,255,0.2);
+            border: 2px solid white;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: all 0.2s;
+        }
+
+        .logout-btn:active {
+            background: rgba(255,255,255,0.4);
+        }
+
+        .progress-section {
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .progress-title {
+            font-size: 1.3rem;
+            color: #333;
+            margin-bottom: 12px;
+        }
+
+        .progress-bar {
+            height: 35px;
+            background: #e0e0e0;
+            border-radius: 18px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #56ab2f 0%, #a8e063 100%);
+            border-radius: 18px;
+            transition: width 0.5s ease;
+        }
+
+        .progress-text {
+            position: absolute;
+            width: 100%;
+            text-align: center;
+            line-height: 35px;
+            font-weight: bold;
+            color: #333;
+            font-size: 1.1rem;
+        }
+
+        .chore-section {
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+        }
+
+        .chore-section.section-complete {
+            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+            border: 3px solid #28a745;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            color: #333;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section-title .icon {
+            font-size: 2rem;
+        }
+
+        .section-badge {
+            margin-left: auto;
+            background: #28a745;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            display: none;
+        }
+
+        .chore-section.section-complete .section-badge {
+            display: inline-block;
+        }
+
+        .chore-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .chore-item {
+            display: flex;
+            align-items: center;
+            padding: 18px 15px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 3px solid transparent;
+            min-height: 70px;
+            -webkit-touch-callout: none;
+            user-select: none;
+        }
+
+        .chore-item:active {
+            transform: scale(0.98);
+            background: #e9ecef;
+        }
+
+        .chore-item.completed {
+            background: linear-gradient(90deg, #d4edda 0%, #c3e6cb 100%);
+            border-color: #28a745;
+        }
+
+        .chore-checkbox {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #6c757d;
+            border-radius: 50%;
+            margin-right: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+
+        .chore-item.completed .chore-checkbox {
+            background: #28a745;
+            border-color: #28a745;
+            color: white;
+        }
+
+        .chore-name {
+            font-size: 1.2rem;
+            color: #333;
+            flex: 1;
+        }
+
+        .chore-item.completed .chore-name {
+            text-decoration: line-through;
+            color: #666;
+        }
+
+        .house-stuff-note {
+            font-size: 1rem;
+            color: #666;
+            font-style: italic;
+            margin-bottom: 12px;
+            padding: 12px;
+            background: #fff3cd;
+            border-radius: 10px;
+        }
+
+        /* Section Celebration Overlay */
+        .section-celebration {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .section-celebration.show {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .section-celebration-content {
+            text-align: center;
+            color: white;
+            padding: 20px;
+        }
+
+        .section-celebration-emoji {
+            font-size: 10rem;
+            animation: bounce 0.4s ease infinite alternate;
+        }
+
+        @keyframes bounce {
+            from { transform: scale(1); }
+            to { transform: scale(1.15); }
+        }
+
+        .section-celebration-text {
+            font-size: 2.8rem;
+            margin: 25px 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .section-celebration-subtext {
+            font-size: 1.6rem;
+            color: rgba(255,255,255,0.9);
+        }
+
+        .confetti {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            animation: confettiFall 3s ease-out forwards;
+        }
+
+        @keyframes confettiFall {
+            0% {
+                transform: translateY(-100vh) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        /* All Done (Day Complete) Celebration */
+        .all-done {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #f5af19 0%, #f12711 100%);
+            z-index: 1001;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .all-done.show {
+            display: flex;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .all-done-content {
+            text-align: center;
+            color: white;
+            padding: 20px;
+        }
+
+        .trophy {
+            font-size: 12rem;
+            animation: trophyBounce 1s ease infinite;
+        }
+
+        @keyframes trophyBounce {
+            0%, 100% { transform: scale(1) rotate(-5deg); }
+            50% { transform: scale(1.1) rotate(5deg); }
+        }
+
+        .all-done-text {
+            font-size: 3.5rem;
+            margin: 25px 0;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.3);
+        }
+
+        .all-done-subtext {
+            font-size: 1.8rem;
+            margin-bottom: 35px;
+        }
+
+        .close-btn {
+            background: white;
+            color: #f12711;
+            border: none;
+            padding: 20px 50px;
+            font-size: 1.5rem;
+            border-radius: 35px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.2s;
+            -webkit-touch-callout: none;
+            user-select: none;
+        }
+
+        .close-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* Parent Dashboard */
+        .parent-screen {
+            display: none;
+        }
+
+        .parent-header {
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .parent-title {
+            font-size: 2rem;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .week-selector {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+
+        .week-selector label {
+            font-weight: bold;
+            color: #555;
+            font-size: 1.1rem;
+        }
+
+        .week-selector input {
+            padding: 12px;
+            border-radius: 10px;
+            border: 2px solid #ddd;
+            font-size: 1.1rem;
+        }
+
+        .summary-card {
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .kid-summary {
+            margin-bottom: 30px;
+        }
+
+        .kid-summary:last-child {
+            margin-bottom: 0;
+        }
+
+        .kid-name {
+            font-size: 1.6rem;
+            color: #333;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .kid-name.zoe { color: #f5576c; }
+        .kid-name.lev { color: #4facfe; }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .stat-box {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.2rem;
+            font-weight: bold;
+            color: #28a745;
+        }
+
+        .stat-label {
+            font-size: 0.95rem;
+            color: #666;
+        }
+
+        .daily-breakdown {
+            margin-top: 15px;
+        }
+
+        .day-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .day-row:last-child {
+            border-bottom: none;
+        }
+
+        .day-name {
+            font-weight: bold;
+            color: #333;
+            font-size: 1.05rem;
+        }
+
+        .day-status {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 1.05rem;
+        }
+
+        .day-status.complete {
+            color: #28a745;
+        }
+
+        .day-status.incomplete {
+            color: #dc3545;
+        }
+
+        .reward-section {
+            background: linear-gradient(135deg, #f5af19 0%, #f12711 100%);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            color: white;
+            margin-top: 15px;
+        }
+
+        .reward-text {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+        }
+
+        .reward-amount {
+            font-size: 2.8rem;
+            font-weight: bold;
+        }
+
+        .back-btn {
+            background: #667eea;
+            border: none;
+            color: white;
+            padding: 12px 28px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: all 0.2s;
+        }
+
+        .back-btn:active {
+            background: #5568d6;
+        }
+
+        .reset-btn {
+            background: #dc3545;
+            border: none;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .reset-btn:active {
+            background: #a71d2a;
+        }
+
+        .button-row {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+
+        /* Tablet optimization (primary) */
+        @media (min-width: 600px) and (max-width: 1024px) {
+            body {
+                padding: 30px;
+            }
+
+            .login-title {
+                font-size: 4rem;
+            }
+
+            .login-subtitle {
+                font-size: 2rem;
+            }
+
+            .user-btn {
+                width: 220px;
+                height: 220px;
+                font-size: 2.4rem;
+            }
+
+            .user-btn .emoji {
+                font-size: 4.5rem;
+            }
+
+            .chore-item {
+                padding: 22px 18px;
+                min-height: 80px;
+            }
+
+            .chore-checkbox {
+                width: 45px;
+                height: 45px;
+                font-size: 1.8rem;
+            }
+
+            .chore-name {
+                font-size: 1.35rem;
+            }
+
+            .section-title {
+                font-size: 1.7rem;
+            }
+
+            .section-title .icon {
+                font-size: 2.2rem;
+            }
+        }
+
+        /* Phone adjustments */
+        @media (max-width: 599px) {
+            body {
+                padding: 15px;
+            }
+
+            .login-title {
+                font-size: 2.5rem;
+            }
+
+            .login-subtitle {
+                font-size: 1.4rem;
+                margin-bottom: 30px;
+            }
+
+            .user-btn {
+                width: 160px;
+                height: 160px;
+                font-size: 1.8rem;
+            }
+
+            .user-btn .emoji {
+                font-size: 3rem;
+            }
+
+            .welcome-msg {
+                font-size: 1.6rem;
+            }
+
+            .section-celebration-emoji {
+                font-size: 7rem;
+            }
+
+            .section-celebration-text {
+                font-size: 2rem;
+            }
+
+            .trophy {
+                font-size: 8rem;
+            }
+
+            .all-done-text {
+                font-size: 2.5rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div class="container">
+        <div class="login-screen" id="loginScreen">
+            <h1 class="login-title">🌟 Chore Champions! 🌟</h1>
+            <p class="login-subtitle">Who's ready to be awesome today?</p>
+            <div class="user-buttons">
+                <button class="user-btn zoe" onclick="login('Zoe')">
+                    <span class="emoji">👧</span>
+                    Zoe
+                </button>
+                <button class="user-btn lev" onclick="login('Lev')">
+                    <span class="emoji">👦</span>
+                    Lev
+                </button>
+            </div>
+            <a class="parent-link" onclick="showParentDashboard()">👨‍👩‍👧‍👦 Parent Dashboard</a>
+        </div>
+
+        <!-- Chore Screen -->
+        <div class="chore-screen" id="choreScreen">
+            <div class="header">
+                <h1 class="welcome-msg" id="welcomeMsg">Hi, Zoe! 👋</h1>
+                <div class="day-display" id="dayDisplay">Monday</div>
+                <button class="logout-btn" onclick="logout()">← Back</button>
+            </div>
+
+            <div class="progress-section">
+                <div class="progress-title">Today's Progress</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+                    <div class="progress-text" id="progressText">0 / 0 chores done</div>
+                </div>
+            </div>
+
+            <div class="chore-section" id="morningSection" data-section="morning">
+                <h2 class="section-title">
+                    <span class="icon">🌅</span> Morning
+                    <span class="section-badge">✓ Done!</span>
+                </h2>
+                <div class="chore-list" id="morningChores"></div>
+            </div>
+
+            <div class="chore-section" id="afternoonSection" data-section="afternoon">
+                <h2 class="section-title">
+                    <span class="icon">☀️</span> Afternoon
+                    <span class="section-badge">✓ Done!</span>
+                </h2>
+                <div class="chore-list" id="afternoonChores"></div>
+            </div>
+
+            <div class="chore-section" id="eveningSection" data-section="evening">
+                <h2 class="section-title">
+                    <span class="icon">🌙</span> Evening
+                    <span class="section-badge">✓ Done!</span>
+                </h2>
+                <div class="chore-list" id="eveningChores"></div>
+            </div>
+
+            <div class="chore-section" id="houseSection" data-section="house">
+                <h2 class="section-title">
+                    <span class="icon">🏠</span> House Stuff
+                    <span class="section-badge">✓ Done!</span>
+                </h2>
+                <p class="house-stuff-note">✨ Pick 1-2 tasks to complete today!</p>
+                <div class="chore-list" id="houseChores"></div>
+            </div>
+        </div>
+
+        <!-- Parent Dashboard -->
+        <div class="parent-screen" id="parentScreen">
+            <div class="parent-header">
+                <h1 class="parent-title">📊 Parent Dashboard</h1>
+                <div class="week-selector">
+                    <label>Week of:</label>
+                    <input type="date" id="weekStart" onchange="updateSummary()">
+                </div>
+                <div class="button-row">
+                    <button class="back-btn" onclick="backToLogin()">← Back to Login</button>
+                    <button class="reset-btn" onclick="resetAllData()">Reset All Data</button>
+                </div>
+            </div>
+
+            <div class="summary-card" id="summaryCard">
+                <!-- Summary will be populated by JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Section Celebration Overlay -->
+    <div class="section-celebration" id="sectionCelebration">
+        <div class="section-celebration-content">
+            <div class="section-celebration-emoji" id="sectionCelebrationEmoji">⭐</div>
+            <div class="section-celebration-text" id="sectionCelebrationText">Section Complete!</div>
+            <div class="section-celebration-subtext" id="sectionCelebrationSubtext">Keep going!</div>
+        </div>
+    </div>
+
+    <!-- All Done (Day Complete) Celebration -->
+    <div class="all-done" id="allDone">
+        <div class="all-done-content">
+            <div class="trophy">🏆</div>
+            <div class="all-done-text">YOU DID IT!</div>
+            <div class="all-done-subtext" id="allDoneSubtext">All chores complete! You're a Chore Champion!</div>
+            <button class="close-btn" onclick="closeAllDone()">Yay! 🎉</button>
+        </div>
+    </div>
+
+    <script>
+        // Chore definitions
+        const chores = {
+            morning: [
+                { id: 'make-beds', name: '🛏️ Make Beds' },
+                { id: 'brush-teeth-am', name: '🦷 Brush Teeth' },
+                { id: 'get-dressed', name: '👕 Get Dressed & Put Away PJs' }
+            ],
+            afternoon: [
+                { id: 'coat-shoes', name: '🧥 Put Away Coat & Shoes', saturdayOnly: true },
+                { id: 'lunchbox', name: '🍱 Empty Lunchbox', saturdayOnly: true },
+                { id: 'water-bottle', name: '💧 Empty Water Bottle', saturdayOnly: true }
+            ],
+            evening: [
+                { id: 'put-toys', name: '🧸 Put Toys Away' },
+                { id: 'homework', name: '📚 Do Homework and Empty Folder', saturdayOnly: true },
+                { id: 'pjs-clothes', name: '👔 Put on PJs & Dirty Clothes in Hamper' },
+                { id: 'brush-teeth-pm', name: '🦷 Brush Teeth & Floss' }
+            ],
+            house: [
+                { id: 'laundry', name: '👚 Put Clean Laundry Away' },
+                { id: 'shoes', name: '👟 Organize Shoes' },
+                { id: 'basement', name: '📦 Organize Basement' },
+                { id: 'bookshelf', name: '📚 Organize Bookshelf in Room' },
+                { id: 'dishes', name: '🍽️ Clear Dishes' },
+                { id: 'art-drawer', name: '🎨 Organize Art Drawer' }
+            ]
+        };
+
+        const sectionCelebrations = {
+            morning: { emoji: '🌅', text: 'Morning Complete!', subtext: 'Great start to the day!' },
+            afternoon: { emoji: '☀️', text: 'Afternoon Done!', subtext: 'You\'re on a roll!' },
+            evening: { emoji: '🌙', text: 'Evening Wrapped Up!', subtext: 'Almost there!' },
+            house: { emoji: '🏠', text: 'House Stuff Done!', subtext: 'You\'re a big helper!' }
+        };
+
+        let currentUser = null;
+        let sectionCompletionState = {
+            morning: false,
+            afternoon: false,
+            evening: false,
+            house: false
+        };
+
+        // Get current day info
+        function getDayInfo() {
+            const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+            const today = new Date();
+            const dayName = days[today.getDay()];
+            const isSaturday = today.getDay() === 6; // Only Saturday hides afternoon/homework
+            return { dayName, isSaturday, dayOfWeek: today.getDay(), date: today.toISOString().split('T')[0] };
+        }
+
+        // Get storage key for a user and date
+        function getStorageKey(user, date) {
+            return `chores_${user}_${date}`;
+        }
+
+        // Save chore completion
+        function saveChoreCompletion(user, date, choreId, completed) {
+            const key = getStorageKey(user, date);
+            let data = JSON.parse(localStorage.getItem(key) || '{}');
+            data[choreId] = completed;
+            localStorage.setItem(key, JSON.stringify(data));
+        }
+
+        // Get chore completion status
+        function getChoreStatus(user, date, choreId) {
+            const key = getStorageKey(user, date);
+            const data = JSON.parse(localStorage.getItem(key) || '{}');
+            return data[choreId] || false;
+        }
+
+        // Login function
+        function login(name) {
+            currentUser = name;
+            // Reset section completion tracking
+            sectionCompletionState = { morning: false, afternoon: false, evening: false, house: false };
+
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('choreScreen').style.display = 'block';
+
+            const dayInfo = getDayInfo();
+            document.getElementById('welcomeMsg').textContent = `Hi, ${name}! 👋`;
+            document.getElementById('dayDisplay').textContent = dayInfo.dayName;
+
+            renderChores();
+        }
+
+        // Logout function
+        function logout() {
+            currentUser = null;
+            document.getElementById('choreScreen').style.display = 'none';
+            document.getElementById('loginScreen').style.display = 'flex';
+        }
+
+        // Get visible chores for a section based on day
+        function getVisibleChores(section, dayInfo) {
+            if (section === 'morning' || section === 'house') {
+                return chores[section];
+            }
+            if (section === 'afternoon') {
+                // Hide entire afternoon section on Saturday only
+                if (dayInfo.isSaturday) return [];
+                return chores.afternoon;
+            }
+            if (section === 'evening') {
+                // Filter out homework on Saturday only
+                return chores.evening.filter(c => !c.saturdayOnly || !dayInfo.isSaturday);
+            }
+            return chores[section];
+        }
+
+        // Check if a section is complete
+        function isSectionComplete(section, dayInfo) {
+            const visibleChores = getVisibleChores(section, dayInfo);
+
+            if (section === 'house') {
+                // Need at least 1 house chore
+                let completed = 0;
+                visibleChores.forEach(c => {
+                    if (getChoreStatus(currentUser, dayInfo.date, c.id)) completed++;
+                });
+                return completed >= 1;
+            }
+
+            if (visibleChores.length === 0) return true; // Section hidden
+
+            return visibleChores.every(c => getChoreStatus(currentUser, dayInfo.date, c.id));
+        }
+
+        // Render chores
+        function renderChores() {
+            const dayInfo = getDayInfo();
+
+            // Morning chores (always shown)
+            renderChoreList('morningChores', chores.morning, dayInfo);
+            updateSectionStyle('morningSection', 'morning', dayInfo);
+
+            // Afternoon chores (hide on Saturday only)
+            const afternoonSection = document.getElementById('afternoonSection');
+            if (dayInfo.isSaturday) {
+                afternoonSection.style.display = 'none';
+                sectionCompletionState.afternoon = true; // Mark as complete since hidden
+            } else {
+                afternoonSection.style.display = 'block';
+                renderChoreList('afternoonChores', chores.afternoon, dayInfo);
+                updateSectionStyle('afternoonSection', 'afternoon', dayInfo);
+            }
+
+            // Evening chores (homework hidden on Saturday only)
+            const eveningChores = getVisibleChores('evening', dayInfo);
+            renderChoreList('eveningChores', eveningChores, dayInfo);
+            updateSectionStyle('eveningSection', 'evening', dayInfo);
+
+            // House chores
+            renderChoreList('houseChores', chores.house, dayInfo);
+            updateSectionStyle('houseSection', 'house', dayInfo);
+
+            // Initialize section completion state based on current status
+            ['morning', 'afternoon', 'evening', 'house'].forEach(section => {
+                if (isSectionComplete(section, dayInfo)) {
+                    sectionCompletionState[section] = true;
+                }
+            });
+
+            updateProgress();
+        }
+
+        // Update section styling
+        function updateSectionStyle(sectionId, sectionName, dayInfo) {
+            const section = document.getElementById(sectionId);
+            if (isSectionComplete(sectionName, dayInfo)) {
+                section.classList.add('section-complete');
+            } else {
+                section.classList.remove('section-complete');
+            }
+        }
+
+        // Render a chore list
+        function renderChoreList(containerId, choreList, dayInfo) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+
+            choreList.forEach(chore => {
+                const isCompleted = getChoreStatus(currentUser, dayInfo.date, chore.id);
+                const item = document.createElement('div');
+                item.className = `chore-item ${isCompleted ? 'completed' : ''}`;
+                item.onclick = () => toggleChore(chore.id, item);
+
+                item.innerHTML = `
+                    <div class="chore-checkbox">${isCompleted ? '✓' : ''}</div>
+                    <span class="chore-name">${chore.name}</span>
+                `;
+
+                container.appendChild(item);
+            });
+        }
+
+        // Find which section a chore belongs to
+        function findChoreSection(choreId) {
+            for (const [section, choreList] of Object.entries(chores)) {
+                if (choreList.some(c => c.id === choreId)) {
+                    return section;
+                }
+            }
+            return null;
+        }
+
+        // Toggle chore completion
+        function toggleChore(choreId, element) {
+            const dayInfo = getDayInfo();
+            const currentStatus = getChoreStatus(currentUser, dayInfo.date, choreId);
+            const newStatus = !currentStatus;
+
+            saveChoreCompletion(currentUser, dayInfo.date, choreId, newStatus);
+
+            if (newStatus) {
+                element.classList.add('completed');
+                element.querySelector('.chore-checkbox').textContent = '✓';
+
+                // Check if section just became complete
+                const section = findChoreSection(choreId);
+                if (section && !sectionCompletionState[section] && isSectionComplete(section, dayInfo)) {
+                    sectionCompletionState[section] = true;
+                    updateSectionStyle(section + 'Section', section, dayInfo);
+                    showSectionCelebration(section);
+                }
+            } else {
+                element.classList.remove('completed');
+                element.querySelector('.chore-checkbox').textContent = '';
+
+                // Section no longer complete
+                const section = findChoreSection(choreId);
+                if (section) {
+                    sectionCompletionState[section] = false;
+                    updateSectionStyle(section + 'Section', section, dayInfo);
+                }
+            }
+
+            updateProgress();
+        }
+
+        // Update progress bar and check for day completion
+        function updateProgress() {
+            const dayInfo = getDayInfo();
+            let total = 0;
+            let completed = 0;
+
+            // Count morning chores
+            chores.morning.forEach(c => {
+                total++;
+                if (getChoreStatus(currentUser, dayInfo.date, c.id)) completed++;
+            });
+
+            // Count afternoon chores (not on Saturday)
+            if (!dayInfo.isSaturday) {
+                chores.afternoon.forEach(c => {
+                    total++;
+                    if (getChoreStatus(currentUser, dayInfo.date, c.id)) completed++;
+                });
+            }
+
+            // Count evening chores
+            chores.evening.forEach(c => {
+                if (!c.saturdayOnly || !dayInfo.isSaturday) {
+                    total++;
+                    if (getChoreStatus(currentUser, dayInfo.date, c.id)) completed++;
+                }
+            });
+
+            // Count house chores (need at least 1)
+            let houseCompleted = 0;
+            chores.house.forEach(c => {
+                if (getChoreStatus(currentUser, dayInfo.date, c.id)) houseCompleted++;
+            });
+            total += 1; // Need at least 1 house chore
+            if (houseCompleted >= 1) completed += 1;
+
+            const percentage = total > 0 ? Math.round((completed / total) * 100) : 0;
+
+            document.getElementById('progressFill').style.width = `${percentage}%`;
+            document.getElementById('progressText').textContent = `${completed} / ${total} chores done`;
+
+            // Check if ALL sections complete (day done!)
+            const allSectionsComplete =
+                sectionCompletionState.morning &&
+                sectionCompletionState.afternoon &&
+                sectionCompletionState.evening &&
+                sectionCompletionState.house;
+
+            if (allSectionsComplete && completed === total && total > 0) {
+                // Delay to let section celebration finish first
+                setTimeout(() => showAllDone(), 2500);
+            }
+        }
+
+        // Show section celebration
+        function showSectionCelebration(section) {
+            const celebration = sectionCelebrations[section];
+
+            document.getElementById('sectionCelebrationEmoji').textContent = celebration.emoji;
+            document.getElementById('sectionCelebrationText').textContent = celebration.text;
+            document.getElementById('sectionCelebrationSubtext').textContent = celebration.subtext;
+
+            const overlay = document.getElementById('sectionCelebration');
+            overlay.classList.add('show');
+
+            createConfetti(overlay);
+
+            setTimeout(() => {
+                overlay.classList.remove('show');
+            }, 2000);
+        }
+
+        // Create confetti effect
+        function createConfetti(container) {
+            const colors = ['#f5af19', '#f12711', '#667eea', '#764ba2', '#56ab2f', '#a8e063', '#ff6b6b', '#4ecdc4'];
+
+            for (let i = 0; i < 60; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = `${Math.random() * 100}%`;
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.animationDelay = `${Math.random() * 0.5}s`;
+                confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+                container.appendChild(confetti);
+
+                setTimeout(() => confetti.remove(), 3000);
+            }
+        }
+
+        // Show all done (day complete) celebration
+        function showAllDone() {
+            const overlay = document.getElementById('allDone');
+            document.getElementById('allDoneSubtext').textContent =
+                `${currentUser}, you completed ALL your chores! You're a Chore Champion!`;
+            overlay.classList.add('show');
+            createConfetti(overlay);
+        }
+
+        // Close all done celebration
+        function closeAllDone() {
+            document.getElementById('allDone').classList.remove('show');
+        }
+
+        // Parent Dashboard
+        function showParentDashboard() {
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('parentScreen').style.display = 'block';
+
+            // Set default week to current week's Monday
+            const today = new Date();
+            const monday = new Date(today);
+            const dayOfWeek = today.getDay();
+            const diff = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
+            monday.setDate(today.getDate() + diff);
+            document.getElementById('weekStart').value = monday.toISOString().split('T')[0];
+
+            updateSummary();
+        }
+
+        // Back to login from parent dashboard
+        function backToLogin() {
+            document.getElementById('parentScreen').style.display = 'none';
+            document.getElementById('loginScreen').style.display = 'flex';
+        }
+
+        // Update summary
+        function updateSummary() {
+            const weekStart = new Date(document.getElementById('weekStart').value);
+            const summaryCard = document.getElementById('summaryCard');
+
+            let html = '';
+
+            ['Zoe', 'Lev'].forEach(kid => {
+                const weekData = getWeekData(kid, weekStart);
+                const isZoe = kid === 'Zoe';
+
+                html += `
+                    <div class="kid-summary">
+                        <h2 class="kid-name ${kid.toLowerCase()}">${isZoe ? '👧' : '👦'} ${kid}'s Week</h2>
+                        <div class="stats-grid">
+                            <div class="stat-box">
+                                <div class="stat-number">${weekData.completedDays}</div>
+                                <div class="stat-label">Days Completed</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="stat-number">${weekData.totalChores}</div>
+                                <div class="stat-label">Chores Done</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="stat-number">${weekData.percentage}%</div>
+                                <div class="stat-label">Completion Rate</div>
+                            </div>
+                        </div>
+                        <div class="daily-breakdown">
+                            <strong>Daily Breakdown:</strong>
+                            ${weekData.days.map(day => `
+                                <div class="day-row">
+                                    <span class="day-name">${day.name}</span>
+                                    <span class="day-status ${day.complete ? 'complete' : 'incomplete'}">
+                                        ${day.complete ? '✅ Complete' : `${day.done}/${day.total} done`}
+                                    </span>
+                                </div>
+                            `).join('')}
+                        </div>
+                        ${weekData.completedDays === 7 ? `
+                            <div class="reward-section">
+                                <div class="reward-text">🎉 ${kid} completed ALL chores this week!</div>
+                                <div class="reward-amount">$10 Reward! 💰</div>
+                            </div>
+                        ` : `
+                            <div style="margin-top: 15px; padding: 15px; background: #f8f9fa; border-radius: 12px; text-align: center;">
+                                <div style="color: #666;">${7 - weekData.completedDays} more day(s) needed for the $10 reward</div>
+                            </div>
+                        `}
+                    </div>
+                `;
+            });
+
+            summaryCard.innerHTML = html;
+        }
+
+        // Get week data for a kid
+        function getWeekData(kid, weekStart) {
+            const dayNames = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+            const days = [];
+            let totalChores = 0;
+            let completedDays = 0;
+            let totalPossible = 0;
+
+            for (let i = 0; i < 7; i++) {
+                const date = new Date(weekStart);
+                date.setDate(weekStart.getDate() + i);
+                const dateStr = date.toISOString().split('T')[0];
+                const isSaturday = i === 5; // Saturday is index 5 (Mon=0)
+
+                let dayTotal = 0;
+                let dayDone = 0;
+
+                // Count chores for this day
+                chores.morning.forEach(c => {
+                    dayTotal++;
+                    if (getChoreStatus(kid, dateStr, c.id)) dayDone++;
+                });
+
+                // Afternoon (not on Saturday)
+                if (!isSaturday) {
+                    chores.afternoon.forEach(c => {
+                        dayTotal++;
+                        if (getChoreStatus(kid, dateStr, c.id)) dayDone++;
+                    });
+                }
+
+                // Evening (homework not on Saturday)
+                chores.evening.forEach(c => {
+                    if (!c.saturdayOnly || !isSaturday) {
+                        dayTotal++;
+                        if (getChoreStatus(kid, dateStr, c.id)) dayDone++;
+                    }
+                });
+
+                // House chores (need at least 1)
+                let houseCount = 0;
+                chores.house.forEach(c => {
+                    if (getChoreStatus(kid, dateStr, c.id)) houseCount++;
+                });
+                dayTotal += 1;
+                if (houseCount >= 1) dayDone++;
+
+                totalChores += dayDone;
+                totalPossible += dayTotal;
+
+                const isComplete = dayDone === dayTotal;
+                if (isComplete) completedDays++;
+
+                days.push({
+                    name: dayNames[i],
+                    done: dayDone,
+                    total: dayTotal,
+                    complete: isComplete
+                });
+            }
+
+            return {
+                days,
+                totalChores,
+                completedDays,
+                percentage: totalPossible > 0 ? Math.round((totalChores / totalPossible) * 100) : 0
+            };
+        }
+
+        // Reset all data
+        function resetAllData() {
+            if (confirm('Are you sure you want to reset ALL chore data? This cannot be undone!')) {
+                const keys = [];
+                for (let i = 0; i < localStorage.length; i++) {
+                    const key = localStorage.key(i);
+                    if (key.startsWith('chores_')) {
+                        keys.push(key);
+                    }
+                }
+                keys.forEach(key => localStorage.removeItem(key));
+                updateSummary();
+                alert('All data has been reset!');
+            }
+        }
+    </script>
+</body>
+</html>
